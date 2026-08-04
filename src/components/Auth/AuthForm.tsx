@@ -37,11 +37,14 @@ const AuthForm = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (signupForm.password !== signupForm.confirmPassword) {
       return;
     }
-    
+    if (signupForm.telefone.length !== 11) {
+      return;
+    }
+
     setIsLoading(true);
     
     try {
@@ -127,14 +130,27 @@ const AuthForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-telefone">Celular (opcional)</Label>
+                  <Label htmlFor="signup-telefone">Celular</Label>
                   <Input
                     id="signup-telefone"
                     type="tel"
-                    placeholder="(44) 99999-9999"
+                    placeholder="19971023040"
                     value={signupForm.telefone}
-                    onChange={(e) => setSignupForm({ ...signupForm, telefone: e.target.value })}
+                    onChange={(e) =>
+                      setSignupForm({
+                        ...signupForm,
+                        telefone: e.target.value.replace(/\D/g, '').slice(0, 11),
+                      })
+                    }
+                    required
+                    minLength={11}
+                    maxLength={11}
                   />
+                  {signupForm.telefone.length > 0 && signupForm.telefone.length !== 11 && (
+                    <p className="text-sm text-destructive">
+                      Celular deve ter DDD + número (11 dígitos), ex: 19971023040
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Senha</Label>
@@ -177,10 +193,14 @@ const AuthForm = () => {
                     <p className="text-sm text-destructive">As senhas não coincidem</p>
                   )}
                 </div>
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading || signupForm.password !== signupForm.confirmPassword}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={
+                    isLoading ||
+                    signupForm.password !== signupForm.confirmPassword ||
+                    signupForm.telefone.length !== 11
+                  }
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Criar Conta
