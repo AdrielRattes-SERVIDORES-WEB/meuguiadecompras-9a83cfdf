@@ -21,6 +21,7 @@ const AuthForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    telefone: '',
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -44,7 +45,7 @@ const AuthForm = () => {
     setIsLoading(true);
     
     try {
-      await signUp(signupForm.email, signupForm.password);
+      await signUp(signupForm.email, signupForm.password, signupForm.telefone);
     } finally {
       setIsLoading(false);
     }
@@ -123,6 +124,16 @@ const AuthForm = () => {
                     value={signupForm.email}
                     onChange={(e) => setSignupForm({ ...signupForm, email: e.target.value })}
                     required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-telefone">Celular (opcional)</Label>
+                  <Input
+                    id="signup-telefone"
+                    type="tel"
+                    placeholder="(44) 99999-9999"
+                    value={signupForm.telefone}
+                    onChange={(e) => setSignupForm({ ...signupForm, telefone: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
